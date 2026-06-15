@@ -18,10 +18,10 @@ resource "aws_vpc" "VPC1" {
 
 #terraform import aws_subnet.Subnet1 subnet-0bce9a8c8685232d8
 resource "aws_subnet" "Subnet1" {
-  availability_zone                   = "us-east-1a"
-  cidr_block                          = "10.0.1.0/24"
-  map_public_ip_on_launch             = true
-  region                              = "us-east-1"
+  availability_zone       = "us-east-1a"
+  cidr_block              = "10.0.1.0/24"
+  map_public_ip_on_launch = true
+  region                  = "us-east-1"
 
   tags = {
     "Name" = "subnet-east-1a"
