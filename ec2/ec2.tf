@@ -18,3 +18,9 @@ resource "aws_instance" "EC2_1" {
     Name = "Kubernetes-EC2-1"
   }
 }
+
+#Role created in ec2_roles.tf file
+resource "aws_iam_instance_profile" "EC2_Instance_Profile" {
+  name = "EC2_Instance_Profile"
+  role = aws_iam_role.EC2_Role.name
+}
