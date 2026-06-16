@@ -1,18 +1,56 @@
 resource "aws_instance" "EC2_1" {
-  ami           = "ami-0c94855ba95c71c99"
-  instance_type = "t2.micro"
-  key_name      = "N-VIRIGINIA-Laptop-Filipe"
-  subnet_id     = aws_subnet.Subnet1.id
+  ami                  = "ami-0b6d9d3d33ba97d99" #ubuntu ami
+  instance_type        = "t2.medium"
+  key_name             = "N-VIRIGINIA-Laptop-Filipe"
+  subnet_id            = aws_subnet.Subnet1.id
+  iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
 
-  vpc_security_group_ids  = [
+  vpc_security_group_ids = [
     aws_security_group.SG1.id,
   ]
 
-    user_data = <<-EOF
+  #EBS configuration for the root volume
+  root_block_device {
+    volume_size           = 20
+    volume_type           = "gp3"
+    delete_on_termination = true
+
+    tags = {
+      Name = "Kubernetes-EC2-1-Disk"
+    }
+  }
+
+  user_data = <<-EOF
               #!/bin/bash
-              sudo apt update -y
-              curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-              sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+              sudo apt-get update -y
+              
+              # Instala o K3s. Este script baixa, instala e já inicia o serviço em background.
+              curl -sfL https://get.k3s.io | sh -
+              
+              # Configura as permissões para o usuário padrão (ubuntu) conseguir usar o kubectl sem sudo
+              sudo chmod 644 /etc/rancher/k3s/k3s.yaml
+              echo 'export KUBECONFIG=/etc/rancher/k3s/k3s.yaml' >> /home/ubuntu/.bashrc
+              
+              # Opcional: cria um alias "kubectl"
+              echo "alias kubectl='k3s kubectl'" >> /home/ubuntu/.bashrc
+
+              # Instala o Docker (O Minikube usa o Docker como "driver" para criar o cluster)
+              sudo apt-get install -y docker.io curl apt-transport-https conntrack
+              sudo systemctl enable docker
+              sudo systemctl start docker
+
+              # Dá permissão para o usuário padrão (ubuntu) usar o Docker sem sudo
+              sudo usermod -aG docker ubuntu
+
+              # Instala o Minikube
+              curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+              sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+              # Inicia o Minikube
+              # O user_data roda como root, mas o Minikube proíbe rodar como root por segurança.
+              # O comando 'su - ubuntu -c' força a execução como o usuário ubuntu.
+              su - ubuntu -c "minikube start --driver=docker"
+
               EOF
   tags = {
     Name = "Kubernetes-EC2-1"

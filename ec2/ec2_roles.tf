@@ -21,3 +21,9 @@ resource "aws_iam_role_policy_attachment" "S3FullAccess" {
   role       = aws_iam_role.EC2_Role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
+
+# Instance Profile
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "ec2-kubernetes-profile"
+  role = aws_iam_role.EC2_Role.name
+}
