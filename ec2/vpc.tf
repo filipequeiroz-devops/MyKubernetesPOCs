@@ -1,3 +1,4 @@
+#imports an existing vpc into the Terraform state. 
 resource "aws_vpc" "VPC1" {
 
   assign_generated_ipv6_cidr_block     = false
@@ -17,6 +18,7 @@ resource "aws_vpc" "VPC1" {
 }
 
 #terraform import aws_subnet.Subnet1 subnet-0bce9a8c8685232d8
+#imports an existing subnet into the Terraform state. 
 resource "aws_subnet" "Subnet1" {
   availability_zone       = "us-east-1a"
   cidr_block              = "10.0.1.0/24"
@@ -35,16 +37,17 @@ resource "aws_subnet" "Subnet1" {
 }
 
 #terraform import aws_security_group.SG1 sg-01b3c0b0ad9c63baf
+#imports an existing security group into the Terraform state. 
 resource "aws_security_group" "SG1" {
   description = "Allows SSH"
   egress = [
     {
       cidr_blocks = [
-        "0.0.0.0/0",
+        "0.0.0.0/0", #ips that can access the EC2 instance via SSH. You can replace "
         "168.227.155.155/32",
       ]
       description      = null
-      from_port        = 22
+      from_port        = 22 #Port which allows SSH access. 
       ipv6_cidr_blocks = []
       prefix_list_ids  = []
       protocol         = "tcp"

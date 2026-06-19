@@ -20,6 +20,7 @@ resource "aws_instance" "EC2_1" {
     }
   }
 
+  #script for installing K3s and Minikube on the EC2 instance. This script will run when the instance is launched.
   user_data = <<-EOF
               #!/bin/bash
               sudo apt-get update -y
