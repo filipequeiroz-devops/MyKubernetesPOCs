@@ -1,0 +1,70 @@
+name: Deploy and update S3 bucket via terraform
+
+#Trigger the workflow on push to main or master branch
+on:
+  push:
+    branches:
+      - main
+      - master
+    path:
+      - '**/*'
+  
+jobs:
+  test_and_validate:
+    runs-on: ubuntu-latest
+
+    #terraform validations
+    steps:
+        #Checkout the code from the repository, download the code to the runner.
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+        #Set up Terraform on the runner, specifying the version to use.
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@3
+        with:
+          terraform_version: "1.7.0"
+      
+       #Initialize Terraform
+      - name: Terraform 
+        working-directory: ./ec2
+        run: terraform init
+        
+        #Run Terraform format check to ensure that the Terraform configuration files are properly formatted 
+      - name: Terraform Format Check
+        working-directory: ./ec2
+        run: terraform fmt -check
+        
+        #Run Terraform validate to check the syntax and internal consistency of the Terraform configuration files.
+      - name: Terraform Validate
+        working-directory: ./ec2
+        run: terraform validate
+
+    #If all the above steps are successful, the deploy job will run.  
+  deploy:
+      name: Terraform Apply & S3 Sync
+      runs-on: ubuntu-latest
+      needs: test_and_validate # Deploy only runs if the test_and_validate job is successful
+
+      #Neeeds env variables
+      env:
+        AWS_ACCESS_KEY_ID    : ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION           : 'us-east-1'
+  
+      steps:
+        - name: Checkout Repository #copys the codde one more time
+          uses: actions/checkout@v4
+  
+        - name: Setup Terraform #install terraform
+          uses: hashicorp/setup-terraform@v3
+          with:
+            terraform_version: "1.7.0"
+  
+        - name: Terraform Init #initialize terraform
+          working-directory: ./ec2
+          run: terraform init
+  
+        - name: Terraform Apply #apply the channges to the infrastructure, creating or updating resources as defined in the Terraform configuration files. The -auto-approve flag is used to skip the interactive approval step, allowing the apply process to proceed without manual intervention.
+          working-directory: ./ec2
+          run: terraform apply -auto-approve
