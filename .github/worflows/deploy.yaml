@@ -10,7 +10,7 @@ on:
       - '**/*'
   
 jobs:
-  test_and_validate: # Ajustado o nome aqui
+  test_and_validate: 
     runs-on: ubuntu-latest
 
     #terraform validations
