@@ -62,7 +62,7 @@ jobs:
 
       - name: Terraform Init #initialize terraform
         working-directory: ./ec2
-        run: terraform init
+        run: terraform init -backend=false #Disabled backend since it's just for testing and validation. Not necessary to access s3 for now
 
       - name: Terraform Apply #apply the channges to the infrastructure, creating or updating resources as defined in the Terraform configuration files. The -auto-approve flag is used to skip the interactive approval step, allowing the apply process to proceed without manual intervention.
         working-directory: ./ec2
