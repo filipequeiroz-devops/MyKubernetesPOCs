@@ -4,7 +4,7 @@
 
 #== S3 Bucket Configuration ===
 resource "aws_s3_bucket" "kubernetes_bucket" {
-  bucket = "kubernetes-bucket-12345678"
+  bucket = "kubernetes-bucket-filipe"
 }
 
 #== S3 Bucket Public Access Block Configuration ===
@@ -17,12 +17,6 @@ resource "aws_s3_bucket_public_access_block" "kubernetes_bucket_public_access_bl
   restrict_public_buckets = true
 }
 
-#== S3 Bucket Access Control Configuration ===
-resource "aws_s3_bucket_access_control" "kubernetes_bucket_acl" {
-  bucket = aws_s3_bucket.kubernetes_bucket.id
-  acl    = "private"
-}
-
 #put all files from "yaml_files" folder into the s3 bucket.
 resource "aws_s3_object" "yaml_files" {
   for_each = fileset("${path.module}/yaml_files", "*")
@@ -32,5 +26,5 @@ resource "aws_s3_object" "yaml_files" {
   source = "${path.module}/../yaml_files/${each.value}"
 
   etag = filemd5("${path.module}/../yaml_files/${each.value}")
-  
+
 }
