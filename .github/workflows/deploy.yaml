@@ -21,7 +21,7 @@ jobs:
 
         #Set up Terraform on the runner, specifying the version to use.
       - name: Set up Terraform
-        uses: hashicorp/setup-terraform@3
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.7.0"
       
