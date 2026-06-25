@@ -19,12 +19,11 @@ resource "aws_s3_bucket_public_access_block" "kubernetes_bucket_public_access_bl
 
 #put all files from "yaml_files" folder into the s3 bucket.
 resource "aws_s3_object" "yaml_files" {
-  for_each = fileset("${path.module}/yaml_files", "*")
+  for_each = fileset("${path.module}/../yaml_files", "*")
 
-  bucket = aws_s3_bucket.kubernetes_bucket.id
-  key    = each.value
-  source = "${path.module}/../yaml_files/${each.value}"
-
-  etag = filemd5("${path.module}/../yaml_files/${each.value}")
+  bucket   = aws_s3_bucket.kubernetes_bucket.id
+  key      = each.value
+  source   = "${path.module}/../yaml_files/${each.value}"
+  etag     = filemd5("${path.module}/../yaml_files/${each.value}")
 
 }
