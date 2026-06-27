@@ -9,6 +9,12 @@ resource "aws_instance" "EC2_1" {
     aws_security_group.SG1.id,
   ]
 
+  lifecycle {
+    ignore_changes = [
+      user_data, # Ignora mudanças invisíveis no script de inicialização
+    ]
+  }
+
   #EBS configuration for the root volume
   root_block_device {
     volume_size           = 20
