@@ -23,5 +23,4 @@ spec:
   selector:
     matchLabels:
       env: production # Utilizado para selecionar os pods que correspondem a esse Deployment com base nos rótulos. O Deployment gerenciará apenas os pods que possuem o rótulo env: production.
-    replicas: 4 #define o numero de replicas
-
+  replicas: 4 #define o numero de replicas
