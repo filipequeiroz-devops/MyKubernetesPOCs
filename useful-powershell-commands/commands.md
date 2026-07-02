@@ -4,3 +4,9 @@
 ### aws ec2 stop-instances --instance-ids "i-05f958d6e5717f930"
 
 For starting the ec2 which is the kubernetes server
+
+
+### $publicIP = aws ec2 describe-instances 
+### $publicIP | select-string "PublicIpAddress" 
+
+For retrieving the Public IP
