@@ -152,6 +152,19 @@ resource "aws_security_group" "SG1" {
       cidr_blocks = [
         "0.0.0.0/0",
       ]
+      description      = "NodePort for Kubernetes" #POC for Kubernetes. This port is used to access the Kubernetes cluster from outside the VPC.
+      from_port        = 30008
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      protocol         = "tcp"
+      security_groups  = []
+      self             = false
+      to_port          = 30008
+    },
+    {
+      cidr_blocks = [
+        "0.0.0.0/0",
+      ]
       description      = null
       from_port        = 33060
       ipv6_cidr_blocks = []
