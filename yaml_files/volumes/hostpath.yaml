@@ -20,4 +20,5 @@ spec:
   volumes:
     - name: hostpath-storage
       hostPath:
-        path: /home/data
+        path: /home/data #diretorio onde o volume será montado no host, não no container
+       #esses dados permanecem no host mesmo que o pod seja deletado, diferente do emptyDir que é deletado junto com o pod
