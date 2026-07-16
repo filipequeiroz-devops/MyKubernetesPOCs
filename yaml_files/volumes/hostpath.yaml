@@ -14,9 +14,10 @@ spec:
     ports:
     - containerPort: 6379
     volumeMounts:
-    - name: cache-storage
+    - name: hostpath-storage
       mountPath: /myVol
 
   volumes:
-    - name: cache-storage
-      emptyDir: {}
+    - name: hostpath-storage
+      hostPath:
+        path: /home/data
