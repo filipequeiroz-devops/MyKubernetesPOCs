@@ -15,7 +15,7 @@ spec:
     - containerPort: 6379
     volumeMounts:
     - name: cache-storage
-      mountPath: /data
+      mountPath: /myVolume
 
 volumes:
   - name: cache-storage
