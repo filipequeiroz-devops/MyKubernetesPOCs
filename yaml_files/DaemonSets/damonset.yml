@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name : MyDaemonSet
+  labels:
+    app: frontend
+
+spec:
+  template:
+    metadata:
+      name: my-pod-webserver
+      labels:
+        app: replica-app
+        tier: frontend
+    
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+  selector:
+    matchLabels:
+      app: replica-app
