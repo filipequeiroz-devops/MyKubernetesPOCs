@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: pod1
+  labels:
+    app: myapp
+    tier: frontend
+
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+  nodeName: minikube-m02 #here's where I can assign this pod to a specific node in the cluster.
