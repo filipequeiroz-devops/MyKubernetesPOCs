@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name : my-daemon-set
+  labels:
+    type: daemonset
+
+spec:
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1 #Here I define how many pods can be unavailable during the update process.
+  template:
+    metadata:
+      name: my-pod-webserver
+      labels:
+        app: replica-app
+        tier: frontend
+    
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+  selector:
+    matchLabels:
+      app: replica-app
