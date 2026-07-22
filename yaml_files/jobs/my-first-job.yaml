@@ -1,0 +1,22 @@
+apiVersion: batch/v1 #batch is an API group that contains resources for running batch jobs in Kubernetes. The version v1 indicates that this is the first stable version of the batch API.
+kind: Job #The kind field specifies the type of resource being created. In this case,
+
+metadata:
+  name: filipes-job
+
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      template:
+        metadata:
+          name: filipes-job-pod
+        spec:
+          containers:
+          - name: filipes-job-busybox
+            image: busybox
+            command: 
+            - /bin/sh
+            - -c
+            - export export numbers=$(seq 1 6)
+            - for i in $numbers; do echo Lucky Number $i = $(( 1 + RANDOM % 60)); done # "1 + " for avoiding zero as a result.
