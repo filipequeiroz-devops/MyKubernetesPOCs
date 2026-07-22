@@ -7,11 +7,11 @@ metadata:
 spec:
   template:
     spec:
-      restartPolicy: Never
       template:
         metadata:
           name: filipes-job-pod
         spec:
+          restartPolicy: Never
           containers:
           - name: filipes-job-busybox
             image: busybox
