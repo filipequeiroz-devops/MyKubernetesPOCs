@@ -4,19 +4,26 @@ kind: Job #The kind field specifies the type of resource being created. In this 
 metadata:
   name: filipes-job
 
+
 spec:
+  completions: 5 #The completions field specifies the desired number of successful completions for the job. In this case, the job will be considered complete when it has successfully completed 5 times.
+  completionMode: Indexed #The completionMode field specifies how the job tracks the completion of its pods. In this case, the job will use an indexed completion mode, which means that each pod will be assigned a unique index value that can be used to track its progress.
+  parallelism: 2 #The parallelism field specifies the maximum number of pods that can run in parallel for the job. In this case, a maximum of 2 pods can run simultaneously.
+  activeDeadlineSeconds: 30 #The activeDeadlineSeconds field specifies the maximum amount of time that the job can run before it is considered failed. In this case, the job will be terminated if it runs for more than 30 seconds.
   template:
+    metadata:
+      name: filipes-job-pod
     spec:
-      template:
-        metadata:
-          name: filipes-job-pod
-        spec:
-          restartPolicy: Never
-          containers:
-          - name: filipes-job-busybox
-            image: busybox
-            command: 
-            - /bin/sh
-            - -c
-            - export export numbers=$(seq 1 6)
-            - for i in $numbers; do echo Lucky Number $i = $(( 1 + RANDOM % 60)); done # "1 + " for avoiding zero as a result.
+      restartPolicy: Never
+      containers:
+      - name: filipes-job-busybox
+        image: busybox
+        command: 
+        - /bin/sh
+        - -c
+        - |
+         numbers=$(seq 1 6)
+         for i in $numbers; do
+          echo Lucky Number $i = $(( 1 + RANDOM % 60));
+         done #"1 + " for avoiding zero as a result.
+          

@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: filipes-cron
+spec:
+  schedule: "* * * * *" #Runs every minute
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: filipes-cron-busybox
+            image: busybox #Distro linux minimalista, muito leve.
+            command: 
+            - /bin/sh
+            - -c
+            - |
+             numbers=$(seq 1 6)
+             for i in $numbers; do
+              echo Lucky Number $i = $(( 1 + RANDOM % 60));
+             done #"1 + " for avoiding zero as a result.
+          restartPolicy: OnFailure
